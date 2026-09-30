@@ -10,6 +10,7 @@ import { OverviewPage } from "./pages/overview";
 const AcceptInvite = lazy(() =>
   import("./pages/accept-invite").then((m) => ({ default: m.AcceptInvite })),
 );
+
 const MembersPage = lazy(() =>
   import("./pages/members").then((m) => ({ default: m.MembersPage })),
 );
