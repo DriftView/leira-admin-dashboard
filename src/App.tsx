@@ -17,6 +17,9 @@ const MembersPage = lazy(() =>
 const SupportPage = lazy(() =>
   import("./pages/support").then((m) => ({ default: m.SupportPage })),
 );
+const CareTeamPage = lazy(() =>
+  import("./pages/care-team").then((m) => ({ default: m.CareTeamPage })),
+);
 const ContentPage = lazy(() =>
   import("./pages/content").then((m) => ({ default: m.ContentPage })),
 );
@@ -50,6 +53,7 @@ export default function App() {
                 <Route index element={<OverviewPage />} />
                 <Route path="members" element={<MembersPage />} />
                 <Route path="support" element={<SupportPage />} />
+                <Route path="care-team" element={<CareTeamPage />} />
                 <Route path="content" element={<ContentPage />} />
                 <Route path="analytics" element={<OverviewPage analytics />} />
                 <Route

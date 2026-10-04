@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -27,6 +28,8 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+// Workspace roles only. Clinicians ("doctor") are invited and managed from
+// the Care team page because they need their own work account.
 const schema = z.object({
   email: z.email("Enter a valid email address."),
   role: z.enum(["admin", "support", "user"]),
@@ -121,7 +124,9 @@ export function TeamPage() {
                         </div>
                       </td>
                       <td>
-                        <Pill value={u.role} />
+                        <Pill
+                          value={u.role === "doctor" ? "clinician" : u.role}
+                        />
                       </td>
                       <td>
                         <Pill value={u.isActive ? "active" : "inactive"} />
@@ -130,6 +135,10 @@ export function TeamPage() {
                       <td>
                         {u.role === "admin" ? (
                           <span className="muted-cell">Protected</span>
+                        ) : u.role === "doctor" ? (
+                          <Button asChild size="sm" variant="ghost">
+                            <Link to="/care-team">Manage in Care team</Link>
+                          </Button>
                         ) : (
                           <Button
                             size="sm"

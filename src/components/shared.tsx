@@ -51,9 +51,16 @@ export function Pill({ value }: { value: string }) {
       "published",
       "resolved",
       "closed",
+      "accepting",
     ].includes(value),
     red = ["urgent", "high", "inactive"].includes(value),
-    amber = ["open", "in_progress", "draft", "pending"].includes(value);
+    amber = [
+      "open",
+      "in_progress",
+      "draft",
+      "pending",
+      "requested",
+    ].includes(value);
   return (
     <span
       className={cn(

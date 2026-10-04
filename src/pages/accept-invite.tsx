@@ -28,7 +28,11 @@ const schema = z
     path: ["confirmPassword"],
   });
 const roleLabel = (role: string) =>
-  role === "admin" ? "an administrator" : "support staff";
+  role === "admin"
+    ? "an administrator"
+    : role === "doctor"
+      ? "a clinician"
+      : "support staff";
 // The emailed link carries the token in the URL fragment, which browsers never
 // send to the host serving this app. It is read once, then removed from the
 // address bar and history so it is not left behind in a shared browser.
@@ -78,6 +82,19 @@ export function AcceptInvite() {
         <Loading />
       </AuthShell>
     );
+  // Clinicians can't use this workspace (auth blocks the role), so instead of
+  // sending them to the web sign-in we point them at the mobile app.
+  if (accept.isSuccess && invite.data.role === "doctor")
+    return (
+      <AuthShell>
+        <div className="eyebrow">YOU’RE IN</div>
+        <h2>Welcome to Leira’s care team.</h2>
+        <p>
+          Your account is ready. Sign in on the Leira mobile app with{" "}
+          {accept.data.email}.
+        </p>
+      </AuthShell>
+    );
   if (accept.isSuccess)
     return (
       <AuthShell>
@@ -95,14 +112,19 @@ export function AcceptInvite() {
         </Button>
       </AuthShell>
     );
+  const clinician = invite.data.role === "doctor";
   return (
     <AuthShell>
       <div className="eyebrow">YOU’RE INVITED</div>
-      <h2>Join the Leira workspace.</h2>
+      <h2>
+        {clinician ? "Join Leira as a clinician." : "Join the Leira workspace."}
+      </h2>
       <p>
-        You’ve been invited as {roleLabel(invite.data.role)}. Create your
-        account to accept. This invitation expires on{" "}
-        {date(invite.data.expiresAt)}.
+        You’ve been invited as {roleLabel(invite.data.role)}.{" "}
+        {clinician
+          ? "Create your account to accept, then sign in on the Leira mobile app to see the members connected with you."
+          : "Create your account to accept."}{" "}
+        This invitation expires on {date(invite.data.expiresAt)}.
       </p>
       {accept.error && <ErrorBox error={accept.error} />}
       <form onSubmit={form.handleSubmit((values) => accept.mutate(values))}>

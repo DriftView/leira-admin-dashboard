@@ -1,4 +1,13 @@
-import type { Audit, Overview, Page, SupportCase, Tip, User } from "./types";
+import type {
+  Audit,
+  CareLink,
+  Clinician,
+  Overview,
+  Page,
+  SupportCase,
+  Tip,
+  User,
+} from "./types";
 const ago = (days: number) =>
   new Date(Date.now() - days * 86400000).toISOString();
 export const demoUser: User = {
@@ -153,6 +162,98 @@ const audit: Audit[] = [
     createdAt: ago(1),
   },
 ];
+export const demoClinicians: Clinician[] = [
+  {
+    id: "clinician-1",
+    firstName: "Grace",
+    lastName: "Okafor",
+    email: "grace.okafor@example.com",
+    isActive: true,
+    title: "GP",
+    organisation: "Riverside Health Centre",
+    acceptingPatients: true,
+    patientCount: 2,
+    lastLoginAt: ago(0),
+  },
+  {
+    id: "clinician-2",
+    firstName: "Daniel",
+    lastName: "Reyes",
+    email: "daniel.reyes@example.com",
+    isActive: true,
+    title: "Cardiology nurse",
+    organisation: "Northgate Clinic",
+    acceptingPatients: true,
+    patientCount: 1,
+    lastLoginAt: ago(2),
+  },
+  {
+    id: "clinician-3",
+    firstName: "Hannah",
+    lastName: "Price",
+    email: "hannah.price@example.com",
+    isActive: true,
+    title: "Dietitian",
+    organisation: null,
+    acceptingPatients: false,
+    patientCount: 0,
+    lastLoginAt: null,
+  },
+];
+const person = (u: User | Clinician) => ({
+  id: "_id" in u ? u._id : u.id,
+  firstName: u.firstName,
+  lastName: u.lastName,
+  email: u.email,
+});
+const careLinks: CareLink[] = [
+  {
+    id: "link-1",
+    status: "requested",
+    origin: "patient",
+    requestNote:
+      "Sample request: I would like someone to review my blood pressure readings.",
+    patient: person(members[1]),
+    clinician: null,
+    createdAt: ago(0),
+  },
+  {
+    id: "link-2",
+    status: "requested",
+    origin: "patient",
+    requestNote: null,
+    patient: person(members[5]),
+    clinician: null,
+    createdAt: ago(1),
+  },
+  {
+    id: "link-3",
+    status: "active",
+    origin: "patient",
+    patient: person(members[0]),
+    clinician: person(demoClinicians[0]),
+    startedAt: ago(6),
+    createdAt: ago(7),
+  },
+  {
+    id: "link-4",
+    status: "active",
+    origin: "admin",
+    patient: person(members[2]),
+    clinician: person(demoClinicians[0]),
+    startedAt: ago(10),
+    createdAt: ago(10),
+  },
+  {
+    id: "link-5",
+    status: "active",
+    origin: "admin",
+    patient: person(members[4]),
+    clinician: person(demoClinicians[1]),
+    startedAt: ago(3),
+    createdAt: ago(3),
+  },
+];
 export function demoOverview(days: number, support: boolean): Overview {
   const points = Array.from({ length: days }, (_, i) => ({
     date: ago(days - i - 1).slice(0, 10),
@@ -197,19 +298,23 @@ export function demoList<T>(
         ? cases
         : resource === "content"
           ? tips
-          : resource === "staff"
-            ? [
-                demoUser,
-                {
-                  ...demoUser,
-                  _id: "demo-support",
-                  firstName: "Jordan",
-                  lastName: "Lee",
-                  email: "jordan@example.com",
-                  role: "support",
-                },
-              ]
-            : audit;
+          : resource === "care-team/links"
+            ? careLinks
+            : resource === "care-team/clinicians"
+              ? demoClinicians
+              : resource === "staff"
+                ? [
+                    demoUser,
+                    {
+                      ...demoUser,
+                      _id: "demo-support",
+                      firstName: "Jordan",
+                      lastName: "Lee",
+                      email: "jordan@example.com",
+                      role: "support",
+                    },
+                  ]
+                : audit;
   const search = (params.get("search") || "").toLowerCase(),
     status = params.get("status"),
     priority = params.get("priority");
