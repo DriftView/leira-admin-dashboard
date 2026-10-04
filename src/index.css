@@ -850,6 +850,41 @@ tbody tr:hover {
   font-size: 10px;
   margin-top: 5px;
 }
+.section-tabs {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 18px;
+}
+.picker-list {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #eeeff4;
+  border-radius: 10px;
+  max-height: 220px;
+  overflow-y: auto;
+}
+.picker-list button {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 10px 12px;
+  text-align: left;
+  border-bottom: 1px solid #f2f2f6;
+}
+.picker-list button:last-child {
+  border-bottom: 0;
+}
+.picker-list button:hover,
+.picker-list button[aria-pressed="true"] {
+  background: #faf7f9;
+}
+.picker-list small {
+  display: block;
+  font-size: 10px;
+  color: #a0a3b0;
+  margin-top: 3px;
+}
 .detail-meta {
   display: flex;
   gap: 20px;

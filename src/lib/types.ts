@@ -90,4 +90,39 @@ export type Overview = {
   contentStatuses?: { _id: string; count: number }[];
   registrations?: Point[];
 };
+// Care team: clinicians are "doctor" accounts that sign in on the mobile app.
+// The care-team endpoints return `id` rather than Mongo's `_id`.
+export type Clinician = {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  isActive: boolean;
+  title?: string | null;
+  organisation?: string | null;
+  acceptingPatients: boolean;
+  patientCount: number;
+  lastLoginAt?: string | null;
+};
+export type CareLinkStatus = "requested" | "active" | "declined" | "ended";
+export type CarePerson = {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+};
+export type CareLink = {
+  id: string;
+  status: CareLinkStatus;
+  origin: "patient" | "admin";
+  requestNote?: string | null;
+  declineReason?: string | null;
+  patient: CarePerson;
+  // A patient request has no clinician until an administrator approves it.
+  clinician: CarePerson | null;
+  startedAt?: string | null;
+  endedAt?: string | null;
+  endedBy?: string | null;
+  createdAt: string;
+};
 export type Session = { token: string; user: User; demo: boolean };

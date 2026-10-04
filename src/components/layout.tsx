@@ -9,6 +9,7 @@ import {
   LogOut,
   Menu,
   ShieldCheck,
+  Stethoscope,
   Users,
   X,
   ChevronRight,
@@ -20,6 +21,7 @@ const navigation = [
   { to: "/", label: "Overview", icon: LayoutDashboard },
   { to: "/members", label: "Members", icon: Users },
   { to: "/support", label: "Support inbox", icon: LifeBuoy },
+  { to: "/care-team", label: "Care team", icon: Stethoscope },
   { to: "/content", label: "Health content", icon: BookOpen },
   { to: "/analytics", label: "Analytics", icon: Activity },
 ];
@@ -83,7 +85,7 @@ export function Layout() {
           <>
             <div className="nav-label">ADMINISTRATION</div>
             <nav aria-label="Administration">
-              {all.slice(5).map((item) => (
+              {all.slice(navigation.length).map((item) => (
                 <NavLink
                   key={item.to}
                   to={item.to}
